@@ -22,7 +22,7 @@ module alu_tb;
     always #5 clk = ~clk;
 
     initial begin
-        $dumpfile("alu.vcd");
+        $dumpfile("sim/alu.vcd");
         $dumpvars(0, alu_tb);
 
         clk = 0;
