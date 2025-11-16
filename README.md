@@ -447,7 +447,7 @@ sudo apt-get install -y iverilog gtkwave yosys
 
 ### 1. Clone Repository
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/CHITTESH-S/4_BIT_ALU_ASIC_DESIGN_FLOW.git
 cd alu_design
 ```
 
