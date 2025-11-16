@@ -3,7 +3,7 @@
 🌟 This repo shows an end-to-end ASIC flow for a **4-bit ALU** (RTL → simulation → synthesis → PnR → GDSII) using **OpenLane / SkyWater SKY130** and open-source EDA tools. A Silicon Journey from Verilog ▶️ Layout (Sky130 + OpenLane).
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Status-Complete-success?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Status-Completed-success?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Flow-RTL_TO_GDSII-blueviolet?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Open_Source-EDA-red?style=for-the-badge" />
   <img src="https://img.shields.io/badge/PDK-Sky130-blue?style=for-the-badge" />
