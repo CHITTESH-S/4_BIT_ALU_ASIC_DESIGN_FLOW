@@ -182,9 +182,397 @@ endmodule
 ```
 ---
 
+## 🚀 Complete Design Flow
+
+### Step 1: 📝 RTL Design
+
+**Create the design directory:**
+```bash
+mkdir -p alu_design/{rtl,sim,synth,outputs}
+cd alu_design
+```
+
+**Create RTL files:**
+- `rtl/alu4bit.v` - Main ALU design
+- `rtl/alu4bit_tb.v` - Testbench
+
+---
+
+### Step 2: 🧪 Simulation & Verification
+
+**Commands:**
+```bash
+cd sim/
+iverilog -o sim/alu.vvp rtl/alu4bit.v rtl/alu4bit_tb.v
+./sim/alu.sim
+```
+
+**View waveforms:**
+```bash
+gtkwave sim/alu.vcd
+```
+
+**✅ Results:**
+- Simulation completed successfully
+- All 8 operations verified
+- Timing: 0-280 ns simulation window
+- VCD file generated: `sim/alu.vcd`
+
+---
+
+### Step 3: 🔧 Synthesis
+
+**Create synthesis script:**
+```bash
+cd synth/
+nano synth.ys
+```
+
+**Synthesis script (`synth.ys`):**
+```tcl
+# Read design
+read_verilog ../rtl/alu4bit.v
+
+# Hierarchy
+hierarchy -check -top alu4bit
+
+# Synthesis
+synth -top alu4bit
+
+# Technology mapping
+dfflibmap -liberty ../lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+abc -liberty ../lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+
+# Clean
+clean
+
+# Write outputs
+write_verilog alu4bit_synth.v
+write_json alu4bit_synth.json
+```
+
+**Run synthesis:**
+```bash
+yosys synth.ys | tee alu_synth.log
+```
+
+**✅ Synthesis Results:**
+```
+=== alu4bit ===
+   Number of wires:                170
+   Number of wire bits:            291
+   Number of public wires:           7
+   Number of public wire bits:      21
+   Number of ports:                  6
+   Number of port bits:             17
+   Number of cells:                117
+     $_ANDNOT_                       46
+     $_AND_                           8
+     $_DFFE_PP_                       4
+     $_NAND_                          5
+     $_NOR_                           3
+     $_NOT_                           1
+     $_ORNOT_                        11
+     $_OR_                           28
+     $_SDFF_PP0_                      4
+     $_XNOR_                          2
+     $_XOR_                           9
+```
+
+---
+
+### Step 4: 🏗️ Physical Design (OpenLane)
+
+#### 4.1 Setup OpenLane Environment
+
+**Set environment variables:**
+```bash
+export PDK_ROOT=/home/chittesh/OpenLane/pdks
+export PDK=sky130A
+export STD_CELL_LIBRARY=sky130_fd_sc_hd
+```
+
+**Navigate to OpenLane:**
+```bash
+cd ~/OpenLane
+source venv/bin/activate
+```
+
+#### 4.2 Create Design Structure
+
+```bash
+mkdir -p designs/alu4bit/src
+cp ~/alu_design/rtl/alu4bit.v designs/alu4bit/src/
+```
+
+#### 4.3 Configuration File
+
+**Create `designs/alu4bit/config.json`:**
+```json
+{
+    "DESIGN_NAME": "alu4bit",
+    "VERILOG_FILES": "dir::src/*.v",
+    "CLOCK_PERIOD": 10,
+    "CLOCK_PORT": "clk",
+    "FP_CORE_UTIL": 40,
+    "PL_TARGET_DENSITY": 0.5
+}
+```
+
+#### 4.4 Run OpenLane Flow
+
+**Using Docker (recommended):**
+```bash
+make mount
+```
+
+**Inside Docker container:**
+```bash
+./flow.tcl -design alu4bit
+```
+
+**✅ Flow Progress:**
+```
+[STEP 1]  ✓ Synthesis
+[STEP 2]  ✓ STA
+[STEP 3]  ✓ Floorplanning
+[STEP 4]  ✓ IO Placement
+[STEP 5]  ✓ Tap/Decap Insertion
+[STEP 6]  ✓ PDN Generation
+[STEP 7]  ✓ Global Placement
+[STEP 8]  ✓ Placement STA
+[STEP 9]  ✓ Resizer Optimization
+[STEP 10] ✓ Detailed Placement
+[STEP 11] ✓ Placement STA
+[STEP 12] ✓ Clock Tree Synthesis
+[STEP 13] ✓ CTS STA
+[STEP 14] ✓ Resizer Timing Opt
+[STEP 15] ✓ Global Routing Resizer
+[STEP 16] ✓ Routing STA
+[STEP 17] ✓ Resizer Timing
+[STEP 18] ✓ STA
+[STEP 19] ✓ Global Routing
+[STEP 20] ✓ Write Netlist
+[STEP 21] ✓ Routing STA
+[STEP 22] ✓ Fill Insertion
+[STEP 23] ✓ Detailed Routing
+[STEP 24] ✓ Wire Length Check
+[STEP 25-31] ✓ SPEF Extraction & Multi-Corner STA
+[STEP 32] ✓ IR Drop Analysis
+[STEP 33] ✓ GDSII Generation (Magic)
+[STEP 34] ✓ GDSII Generation (KLayout)
+[STEP 35] ✓ XOR Check
+[STEP 36] ✓ SPICE Export
+[STEP 37-38] ✓ Powered Verilog
+[STEP 39] ✓ LVS
+[STEP 40] ✓ DRC (Magic)
+[STEP 41] ✓ Antenna Check
+[STEP 42] ✓ ERC
+
+[SUCCESS]: Flow complete.
+```
+
+---
+
+## 📊 Final Results
+
+### Physical Design Metrics
+
+| Metric | Value |
+|--------|-------|
+| 📐 **Die Area** | 0.0033 mm² (40.94 × 40.8 µm) |
+| 🎯 **Core Utilization** | 40% |
+| 🔢 **Total Cells** | 270 |
+| ├─ Logic Cells | 66 |
+| ├─ Decap Cells | 25 |
+| ├─ Filler Cells | 85 |
+| └─ Welltap Cells | 57 |
+| 📏 **Wire Length** | 1,811 µm |
+| 🔗 **Vias** | 587 |
+| 📦 **GDSII Size** | 506 KB |
+
+### Timing Analysis
+
+| Parameter | Value | Status |
+|-----------|-------|--------|
+| ⏱️ **Clock Period** | 10 ns (100 MHz) | ✅ |
+| 📈 **Critical Path** | 1.65 ns | ✅ |
+| 🎯 **Setup Slack (WNS)** | 0.0 ns | ✅ No Violations |
+| ⏰ **Hold Slack (TNS)** | 0.0 ns | ✅ No Violations |
+| 🚀 **Max Frequency** | 606 MHz | ✅ |
+
+### Power Analysis (Typical Corner)
+
+| Type | Power |
+|------|-------|
+| ⚡ **Internal Power** | 0.0824 µW |
+| 🔄 **Switching Power** | 0.0307 µW |
+| 💤 **Leakage Power** | 0.553 pW |
+| 💡 **Total Power** | ~0.113 µW |
+
+### Verification Status
+
+| Check | Status |
+|-------|--------|
+| ✅ **DRC (Magic)** | 0 violations |
+| ✅ **LVS (Netgen)** | Clean - Layout matches schematic |
+| ✅ **Antenna Check** | 0 violations |
+| ✅ **ERC** | Pass |
+| ✅ **XOR (Magic vs KLayout)** | No differences |
+
+---
+
+## 📁 Project Structure
+
+```
+alu_design/
+├── rtl/
+│   ├── alu4bit.v          # Main ALU design
+│   └── alu4bit_tb.v       # Testbench
+├── sim/
+│   └── alu.vcd            # Simulation waveform
+├── synth/
+│   ├── synth.ys           # Yosys synthesis script
+│   ├── alu4bit_synth.v    # Synthesized netlist
+│   ├── alu4bit_synth.json # JSON netlist
+│   └── alu_synth.log      # Synthesis log
+└── outputs/
+    └── waveform.png       # Waveform screenshot
+
+OpenLane/designs/alu4bit/
+├── config.json            # OpenLane configuration
+├── src/
+│   └── alu4bit.v         # RTL source
+└── runs/
+    └── RUN_2025.11.16_04.02.04/
+        ├── logs/          # All stage logs
+        ├── reports/       # Timing, area, power reports
+        │   └── metrics.csv
+        └── results/
+            └── final/
+                ├── gds/   # alu4bit.gds (GDSII layout)
+                ├── def/   # DEF files
+                ├── lef/   # LEF files
+                ├── verilog/ # Final netlist
+                ├── spef/  # Parasitic extraction
+                └── spi/   # SPICE netlist
+```
+
+---
+
+## 🎯 How to Run
+
+### Prerequisites
+```bash
+# Install dependencies
+sudo apt-get update
+sudo apt-get install -y iverilog gtkwave yosys
+```
+
+### 1. Clone Repository
+```bash
+git clone <your-repo-url>
+cd alu_design
+```
+
+### 2. Run Simulation
+```bash
+cd sim/
+iverilog -o alu.sim ../rtl/alu4bit.v ../rtl/alu4bit_tb.v
+./sim/alu.sim
+gtkwave sim/alu.vcd
+```
+
+### 3. Run Synthesis
+```bash
+cd synth/
+yosys synth.ys | tee alu_synth.log
+```
+
+### 4. Run OpenLane Flow
+```bash
+cd ~/OpenLane
+source venv/bin/activate
+export PDK_ROOT=/home/chittesh/OpenLane/pdks
+export PDK=sky130A
+
+make mount  # Enter Docker
+
+# Inside Docker:
+./flow.tcl -design alu4bit
+```
+
+### 5. View Results
+```bash
+# View GDSII in KLayout
+klayout designs/alu4bit/runs/RUN_*/results/final/gds/alu4bit.gds
+
+# View metrics
+cat designs/alu4bit/runs/RUN_*/reports/metrics.csv
+```
+
+---
+
+## 📸 Screenshots
+
+### Simulation Waveform
 
 
+### Layout Views
+```bash
+# View final GDSII layout
+klayout ~/OpenLane/designs/alu4bit/runs/RUN_*/results/final/gds/alu4bit.gds
+```
 
+# View with Magic
+```bash
+magic -T sky130A ~/OpenLane/designs/alu4bit/runs/RUN_*/results/final/mag/alu4bit.mag
+```
 
+---
 
+## 🎓 Key Learnings
 
+✅ **RTL Design:** Implemented synthesizable Verilog with proper coding practices  
+✅ **Verification:** Functional simulation and waveform analysis  
+✅ **Synthesis:** Technology mapping to Sky130 standard cells  
+✅ **Physical Design:** Complete automated PnR flow with OpenLane  
+✅ **Timing Closure:** Achieved target frequency with zero violations  
+✅ **Signoff:** DRC/LVS clean layout ready for fabrication  
+
+---
+
+## 📚 References
+
+- [OpenLane Documentation](https://openlane.readthedocs.io/)
+- [SkyWater Sky130 PDK](https://skywater-pdk.readthedocs.io/)
+- [Yosys Manual](https://yosyshq.net/yosys/documentation.html)
+- [Magic VLSI](http://opencircuitdesign.com/magic/)
+- [KLayout](https://www.klayout.de/)
+
+---
+
+## 👨‍💻 Author
+
+Chittesh S 
+📧 Email: chitteshmsd7831@gmail.com 
+🔗 LinkedIn: [Your Profile](https://www.linkedin.com/in/chittesh-s-280580290/)  
+🐱 GitHub: [Your GitHub](https://github.com/CHITTESH-S)
+
+---
+
+## 📄 License
+
+This project is open-source under the Apache 2.0 License.
+
+---
+
+<p align="center">
+  <b>⭐ If you find this project useful, please give it a star! ⭐</b>
+</p>
+
+<p align="center">
+  Made with ❤️ using open-source EDA tools
+</p>
+
+---
