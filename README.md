@@ -545,8 +545,11 @@ magic -T ~/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech \
 ## 👨‍💻 Author
 
 Chittesh S 
+
 📧 Email: chitteshmsd7831@gmail.com 
+
 🔗 LinkedIn: [Your Profile](https://www.linkedin.com/in/chittesh-s-280580290/)  
+
 🐱 GitHub: [Your GitHub](https://github.com/CHITTESH-S)
 
 ---
