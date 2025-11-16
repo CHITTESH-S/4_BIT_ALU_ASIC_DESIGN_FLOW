@@ -497,12 +497,19 @@ cat designs/alu4bit/runs/RUN_*/reports/metrics.csv
 ### Layout Views
 ```bash
 # View final GDSII layout
-klayout ~/OpenLane/designs/alu4bit/runs/RUN_*/results/final/gds/alu4bit.gds
+klayout ~/OpenLane/designs/alu4bit/runs/RUN_2025.11.16_04.02.04/results/final/gds/alu4bit.gds
 ```
 
-# View with Magic
+### View with Magic
 ```bash
-magic -T sky130A ~/OpenLane/designs/alu4bit/runs/RUN_*/results/final/mag/alu4bit.mag
+magic -T ~/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech \
+      ~/OpenLane/designs/alu4bit/runs/RUN_2025.11.16_04.02.04/results/final/gds/alu4bit.gds
+```
+
+### View in Magic (with MAG file - native format)
+```bash
+magic -T ~/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech \
+      ~/OpenLane/designs/alu4bit/runs/RUN_2025.11.16_04.02.04/results/final/mag/alu4bit.mag
 ```
 
 ---
