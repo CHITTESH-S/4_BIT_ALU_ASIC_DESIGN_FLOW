@@ -10,6 +10,12 @@
   <img src="https://img.shields.io/badge/Frequency-100MHz-orange?style=for-the-badge" />
 </p>
 
+<p align="center">
+
+<img width="1024" height="1024" alt="conceptual_rtl_to_gds_flow" src="https://github.com/user-attachments/assets/8af28e36-7afd-47d0-b074-e10806c6f3fb" />
+
+</p>
+
 ---
 
 ## 🔍 Project Summary
@@ -188,6 +194,13 @@ iverilog -o sim/alu.vvp rtl/alu4bit.v rtl/alu4bit_tb.v
 gtkwave sim/alu.vcd
 ```
 
+<p align="center">
+
+<img width="1024" height="1024" alt="rtl_output" src="https://github.com/user-attachments/assets/0da9fb3d-ae01-43bd-93ec-562b68567134" />
+
+</p>
+
+
 **✅ Results:**
 - Simulation completed successfully
 - All 8 operations verified
@@ -231,6 +244,11 @@ write_json alu4bit_synth.json
 ```bash
 yosys synth.ys | tee alu_synth.log
 ```
+<p align="center">
+
+<img width="1024" height="1024" alt="synth" src="https://github.com/user-attachments/assets/f9e88038-0260-494e-9a9f-c4091676f39c" />
+
+</p>
 
 **✅ Synthesis Results:**
 ```
@@ -254,6 +272,11 @@ yosys synth.ys | tee alu_synth.log
      $_XNOR_                          2
      $_XOR_                           9
 ```
+<p align="center">
+
+<img width="1024" height="1024" alt="synth_output" src="https://github.com/user-attachments/assets/e9b5ddc9-a315-4723-9a27-021cafa897f8" />
+
+</p>
 
 ---
 
@@ -267,12 +290,11 @@ export PDK_ROOT=/home/chittesh/OpenLane/pdks
 export PDK=sky130A
 export STD_CELL_LIBRARY=sky130_fd_sc_hd
 ```
+<p align="center">
 
-**Navigate to OpenLane:**
-```bash
-cd ~/OpenLane
-source venv/bin/activate
-```
+<img width="1024" height="1024" alt="setting_pdk" src="https://github.com/user-attachments/assets/f201f0ba-db33-4133-ab15-eeb7582741d5" />
+
+</p>
 
 #### 4.2 Create Design Structure
 
@@ -295,6 +317,12 @@ cp ~/alu_design/rtl/alu4bit.v designs/alu4bit/src/
 }
 ```
 
+<p align="center">
+
+<img width="1024" height="1024" alt="openlane_setup" src="https://github.com/user-attachments/assets/120e449d-3d1a-434d-88f9-f67c3eeeb66f" />
+
+</p>
+
 #### 4.4 Run OpenLane Flow
 
 **Using Docker (recommended):**
@@ -306,6 +334,12 @@ make mount
 ```bash
 ./flow.tcl -design alu4bit
 ```
+
+<p align="center">
+
+<img width="1024" height="1024" alt="run_docker1" src="https://github.com/user-attachments/assets/f179d77c-e75a-4a94-b805-eb57bb809c15" />
+
+</p>
 
 **✅ Flow Progress:**
 ```
@@ -347,6 +381,12 @@ make mount
 
 [SUCCESS]: Flow complete.
 ```
+
+<p align="center">
+
+<img width="1024" height="1024" alt="run_docker2" src="https://github.com/user-attachments/assets/dfe1b64b-01b9-4ff6-bedf-0a2326e4eed0" />
+
+</p>
 
 ---
 
@@ -436,81 +476,48 @@ OpenLane/designs/alu4bit/
 
 ---
 
-## 🎯 How to Run
-
-### Prerequisites
-```bash
-# Install dependencies
-sudo apt-get update
-sudo apt-get install -y iverilog gtkwave yosys
-```
-
-### 1. Clone Repository
-```bash
-git clone https://github.com/CHITTESH-S/4_BIT_ALU_ASIC_DESIGN_FLOW.git
-cd alu_design
-```
-
-### 2. Run Simulation
-```bash
-cd sim/
-iverilog -o alu.sim ../rtl/alu4bit.v ../rtl/alu4bit_tb.v
-./sim/alu.sim
-gtkwave sim/alu.vcd
-```
-
-### 3. Run Synthesis
-```bash
-cd synth/
-yosys synth.ys | tee alu_synth.log
-```
-
-### 4. Run OpenLane Flow
-```bash
-cd ~/OpenLane
-source venv/bin/activate
-export PDK_ROOT=/home/chittesh/OpenLane/pdks
-export PDK=sky130A
-
-make mount  # Enter Docker
-
-# Inside Docker:
-./flow.tcl -design alu4bit
-```
-
-### 5. View Results
-```bash
-# View GDSII in KLayout
-klayout designs/alu4bit/runs/RUN_*/results/final/gds/alu4bit.gds
-
-# View metrics
-cat designs/alu4bit/runs/RUN_*/reports/metrics.csv
-```
-
----
-
 ## 📸 Screenshots
 
 ### Simulation Waveform
 
+<p align="center">
+
+<img width="1024" height="1024" alt="rtl_output" src="https://github.com/user-attachments/assets/7fa7fceb-ed29-4abd-8fbc-0e89900d8fd3" />
+
+</p>
 
 ### Layout Views
 ```bash
 # View final GDSII layout
 klayout ~/OpenLane/designs/alu4bit/runs/RUN_2025.11.16_04.02.04/results/final/gds/alu4bit.gds
 ```
+<p align="center">
+
+<img width="1024" height="1024" alt="Output_KLayout" src="https://github.com/user-attachments/assets/92021eae-1060-4f9d-b8de-7203f1ac1293" />
+
+</p>
 
 ### View with Magic
 ```bash
 magic -T ~/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech \
       ~/OpenLane/designs/alu4bit/runs/RUN_2025.11.16_04.02.04/results/final/gds/alu4bit.gds
 ```
+<p align="center">
+
+<img width="1024" height="1024" alt="magic_view" src="https://github.com/user-attachments/assets/18640106-91d7-47e6-9765-c006c2f01290" />
+
+</p>
 
 ### View in Magic (with MAG file - native format)
 ```bash
 magic -T ~/OpenLane/pdks/sky130A/libs.tech/magic/sky130A.tech \
       ~/OpenLane/designs/alu4bit/runs/RUN_2025.11.16_04.02.04/results/final/mag/alu4bit.mag
 ```
+<p align="center">
+
+<img width="1024" height="1024" alt="magic" src="https://github.com/user-attachments/assets/eff68fa3-7e03-4afd-ae3d-e019e99119de" />
+
+</p>
 
 ---
 
@@ -555,7 +562,7 @@ This project is open-source under the Apache 2.0 License.
 </p>
 
 <p align="center">
-  Made with ❤️ using open-source EDA tools
+  Made with ❤️ using Open-Source EDA tools
 </p>
 
 ---
