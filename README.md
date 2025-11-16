@@ -12,30 +12,6 @@
 
 ---
 
-## 📋 Table of Contents
-
-🔍 [Project Summary](#-project-summary)
-
-⚙️ [Tools & Versions](#️-tools--versions)
-
-🧠 [ALU Functional Specification](#-alu-functional-spec)
-
-🚀 [Complete Design Flow](#-complete-design-flow)
-  - 📝 [Step 1: RTL Design](#step-1--rtl-design)
-  - 🧪 [Step 2: Simulation](#step-2--simulation--verification)
-  - 🔧 [Step 3: Synthesis](#step-3--synthesis)
-  - 🏗️ [Step 4: Physical Design (OpenLane)](#step-4--physical-design-openlane)
-
-📊 [Final Results](#-final-results)
-
-📁 [Project Structure](#-project-structure)
-
-🎯 [How to Run](#-how-to-run)
-
-📚 [References](#-references)
-
----
-
 ## 🔍 Project Summary
 
 | Parameter | Value |
